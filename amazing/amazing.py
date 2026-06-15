@@ -77,8 +77,7 @@ def valid(x, y, width, height):
 
 #def random_path(current, visited, maze_grid):
 #    x, y = current
-#    hex_current = maze_grid[y][x]
-#    nc, ec, sc, wc = cell_from_hex(hex_current)
+
 #    stack = []
 #    north = (x, y-1)
 #    east = (x+1, y)
@@ -99,25 +98,7 @@ def valid(x, y, width, height):
 #            stack.append(west)
 #    if stack:
 #        result =  random.choice(stack)
-#        a, b = result
-#        new_cell = maze_grid[b][a]
-#        n, e, s, w = cell_from_hex(new_cell)
-#        if a == north[0] and b == north[1]:
-#            nc = 0
-#            s = 0
-#        elif a == east[0] and b == east[1]:
-#            ec = 0
-#            w = 0
-#        elif a == south[0] and b == south[1]:
-#            sc = 0
-#            n = 0
-#        elif a == west[0] and b == west[1]:
-#            wc = 0
-#            e = 0
-#        to_hex_current = hex_for_cell(nc, ec, sc, wc)
-#        to_new_cell = hex_for_cell(n, e, s, w)
-#        maze_grid[y][x] = to_hex_current
-#        maze_grid[b][a] = to_new_cell
+
 #        return result
 
 #    return None
@@ -259,18 +240,28 @@ def dfs_maze(maze_grid, visited, entry, width, height):
 m = dfs_maze(maze_grid, visited, entry, width, height)
 
 
-def generate_m_maze(m):
-    maze = []
-    for y in range(height):
-        row = []
-        for x in range(width):
-            #print(m[x][y], end="")
-            row.append(m[x][y])
-        #row.append()
-        maze.append("".join(row))
-    return "\n".join(maze)
+#def generate_m_maze(m):
+#    maze = []
+#    for y in range(height):
+#        row = []
+#        for x in range(width):
+#            #print(m[x][y], end="")
+#            row.append(m[x][y])
+#        #row.append()
+#        maze.append("".join(row))
+#    return "\n".join(maze)
+
+def output(maze, entry, exit ):
+    for value in maze:
+        print("".join(value))
+    print("\n")
+    print(f"{entry[0]},{entry[1]}")
+    print(f"{exit[0]},{exit[1]}")
 
 
-test = generate_m_maze(m)
+
+print(m)
+#test = generate_m_maze(m)
 print(visited)
-print(test)
+#print(test)
+output(m, entry,exit)
