@@ -105,14 +105,30 @@ print(maze_text)
 #print(maze_first_text)
 print(visited_cells)
 
-n, e, s, w = cell_from_hex('3')
-print(f"{n} {e} {s} {w}")
+#n, e, s, w = cell_from_hex('3')
+#print(f"{n} {e} {s} {w}")
 
-hexvalue = hex_for_cell(1, 1, 1 , 0)
-print(hexvalue)
+#hexvalue = hex_for_cell(1, 1, 1 , 0)
+#print(hexvalue)
 #visited_cells = set()
 
-maze_text[1][0] = 'E'
-print(maze_text)
+#maze_text[1][0] = 'E'
+#print(maze_text)
 
 #print(visited_cells)
+
+start_x = (width - 7) // 2
+start_y = (height - 5) // 2
+
+pattern = [
+    ["4","4","4"," ","2","2","2"],
+    [" "," ","4"," "," "," ","2"],
+    ["4","4","4"," ","2","2","2"],
+    ["4"," "," "," "," "," ","2"],
+    ["4","4","4"," ","2","2","2"],
+]
+
+
+for py in range(5):
+    for px in range(7):
+        maze[start_y + py][start_x + px] = pattern[py][px]
