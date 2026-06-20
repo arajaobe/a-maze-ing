@@ -85,7 +85,7 @@ def entry_gen(visited, width, height):
 #walls to break
 def walls_to_break(width, height):
     total_internal_walls = width * (height - 1) + height * (width - 1)
-    percentage = random.randint(5, 15) / 100.0
+    percentage = random.randint(5, 7) / 100.0
     walls_break = max(1, int(total_internal_walls * percentage))
 
     return walls_break
@@ -128,7 +128,7 @@ def imperfect_maze_gen(maze_init, maze_grid, visited):
         result = find_imp_paths(entry[0], entry[1], width, height, visited, maze_grid)
         if result:
             vx, vy, directions = result
+            visited[vy][vx] = True
             carve_paths(entry[0], entry[1], vx, vy, directions, maze_grid)
             walls_break -= 1
-
     return maze_grid
