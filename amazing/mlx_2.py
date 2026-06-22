@@ -1,12 +1,24 @@
+# ************************************************************************* #
+#                                                                           #
+#                                                      :::      ::::::::    #
+#  mlx_2.py                                          :+:      :+:    :+:    #
+#                                                  +:+ +:+         +:+      #
+#  By: samrazaf <samrazaf@student.42antananari   +#+  +:+       +#+         #
+#                                              +#+#+#+#+#+   +#+            #
+#  Created: 2026/06/23 00:38:34 by samrazaf        #+#    #+#               #
+#  Updated: 2026/06/23 01:10:46 by samrazaf        ###   ########.fr        #
+#                                                                           #
+# ************************************************************************* #
+
 import mlx
-from utils import width, height, cell_from_hex
-from amazing import result_maze
+from utils import width, height, entry, exit, cell_from_hex
+from amazing import result_maze, maze_init, maze_gen, new_visited, imperfect_maze_gen
 
 # Window dimensions (fixed)
-w = 1080
-h = 720
-thickness = 3
-margin = 100
+w = 550
+h = 550
+thickness = 5
+margin = 20
 
 # Choose one uniform cell size (square cells)
 cell_size = min((w - 2*margin) // width, (h - 2*margin) // height)
@@ -48,7 +60,7 @@ class Draw:
                 self.m.mlx_pixel_put(
                     self.ptr,
                     self.win,
-                    self.pos_x + j,
+                    self.pos_x,
                     self.pos_y + self.side_y - i,
                     self.color
                     )
@@ -98,19 +110,19 @@ class Draw:
                 self.m.mlx_pixel_put(
                         self.ptr,
                         self.win,
-                        self.pos_x + self.side_x - i - thickness,
+                        self.pos_x + self.side_x - i,
                         self.pos_y + j + thickness,
                         self.color
                     )
-        #square right down
+        ##square right down
         self.color = color_3
         for i in range(size_xx):
             for j in range(size_yy):
                 self.m.mlx_pixel_put(
                         self.ptr,
                         self.win,
-                        self.pos_x + self.side_x - i - thickness,
-                        self.pos_y + self.side_y - j - thickness,
+                        self.pos_x + self.side_y - i,
+                        self.pos_y + self.side_x - j,
                         self.color
                     )
         #square left down
@@ -121,7 +133,7 @@ class Draw:
                     self.ptr,
                     self.win,
                     self.pos_x + i + thickness,
-                    self.pos_y + self.side_y - j - thickness,
+                    self.pos_y + self.side_y - j,
                     self.color
                 )
         self.color = temp
@@ -172,36 +184,66 @@ class TraceNextSquare(TraceSquare):
         self.pos_x = temp_x
         self.pos_y = temp_y
 
-    def draw_posit(self, x, y):
+    def draw_posit(self, x, y, color_1, color_2, color_3, color_4):
         temp_x = self.pos_x
         temp_y = self.pos_y
         self.pos_x = x
         self.pos_y = y
-        super().draw_square(0xFF253614, 0xFF748596, 0xFF326598, 0xFF784512)
+        super().draw_square(color_1, color_2, color_3, color_4)
         self.pos_x = temp_x
         self.pos_y = temp_y
 
-#def convert_posit_to_pixel(x, y):
 
+C = {
+    'W': 0xFFFFFFFF,
+    'R': 0xFFFF2020,
+    'B': 0xFF2020FF,
+    'G': 0xFF20FF20,
+    'Y': 0xFFFFFF20,
+}
+
+
+
+def convert_posit_to_pixel(draw, x, y, color_1, color_2, color_3, color_4):
+    a = x * cell_size + margin
+    b = y * cell_size + margin
+    draw.draw_posit(a, b, color_1, color_2, color_3, color_4)
+
+#def draw_move(maze):
+
+#def maze_regen():
+#    if not maze_init.perfect:
+#        result_maze = imperfect_maze_gen(maze_init, maze_gen, new_visited)
+#    else:
+#        result_maze = maze_gen
+#    return result_maze
 
 def deal_key(key, ptr):
     print(f"Key pressed: {key}")
     if key == 99:
         m.mlx_loop_exit(ptr)
-    if key == 32:
-        m.mlx_expose_hook(win, test.square_all, None)
+    #if key == 114:
+    #    maze_regen()
+
+def draw_enter_sort(draw):
+    x1, y1 = entry
+    x2, y2 = exit
+    convert_posit_to_pixel(draw, x1, y1, C['G'], C['G'], C['G'], C['G'])
+    convert_posit_to_pixel(draw, x2, y2, C['R'], C['R'], C['R'], C['R'])
 
 m = mlx.Mlx()
 ptr = m.mlx_init()
 
 win = m.mlx_new_window(ptr, w, h, "A-maze-ing")
 maze = result_maze
-
+#if maze_regen():
+#    maze = maze_regen()
 # Start drawing at border offsets
 test = TraceNextSquare(m, ptr, win, border_x, border_y, size_x, size_y,
                        0xFFFFFFFF, cell_from_hex('0'), width, height, maze)
 
-test.draw_posit(3, 6)
+#convert_posit_to_pixel(test, 2, 2, C['B'], C['G'], C['W'], C['R'])
+draw_enter_sort(test)
 m.mlx_key_hook(win, deal_key, ptr)
 m.mlx_expose_hook(win, test.square_all, None)
 
