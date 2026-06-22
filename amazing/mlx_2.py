@@ -12,7 +12,6 @@ margin = 100
 cell_size = min((w - 2*margin) // width, (h - 2*margin) // height)
 size_x = size_y = cell_size
 
-
 # Maze dimensions in pixels
 maze_w = width * cell_size
 maze_h = height * cell_size
@@ -34,19 +33,100 @@ class Draw:
 
     def draw_line_top(self):
         for i in range(self.side_x):
-            self.m.mlx_pixel_put(self.ptr, self.win, self.pos_x + i, self.pos_y, self.color)
+            self.m.mlx_pixel_put(
+                self.ptr,
+                self.win,
+                self.pos_x + i,
+                self.pos_y,
+                self.color
+                )
 
     def draw_line_left(self):
         for i in range(self.side_y):
-            self.m.mlx_pixel_put(self.ptr, self.win, self.pos_x, self.pos_y + self.side_y - i, self.color)
+            self.m.mlx_pixel_put(
+                self.ptr,
+                self.win,
+                self.pos_x,
+                self.pos_y + self.side_y - i,
+                self.color
+                )
 
     def draw_line_down(self):
         for i in range(self.side_x):
-            self.m.mlx_pixel_put(self.ptr, self.win, self.pos_x + i, self.pos_y + self.side_y, self.color)
+            self.m.mlx_pixel_put(
+                self.ptr,
+                self.win,
+                self.pos_x + i,
+                self.pos_y + self.side_y,
+                self.color
+                )
 
     def draw_line_right(self):
         for i in range(self.side_y):
-            self.m.mlx_pixel_put(self.ptr, self.win, self.pos_x + self.side_x, self.pos_y + i, self.color)
+            self.m.mlx_pixel_put(
+                self.ptr,
+                self.win,
+                self.pos_x + self.side_x,
+                self.pos_y + i,
+                self.color
+                )
+
+    def draw_square_42(self):
+        size_yy = int(self.side_y)
+        size_xx = int(self.side_x)
+        for x in range(size_xx):
+            for y in range(size_yy):
+                self.m.mlx_pixel_put(
+                    self.ptr,
+                    self.win,
+                    self.pos_x + x,
+                    self.pos_y + y,
+                    self.color
+                )
+
+    def draw_square(self):
+        size_yy = int(size_y / 2)
+        size_xx= int(size_x / 2)
+        #square left top
+        #for i in range(size_yy):
+        #    #for j in range(size_xx):
+        #        self.m.mlx_pixel_put(
+        #            self.ptr,
+        #            self.win,
+        #            self.pos_x + i + 1,
+        #            self.pos_y + 1,
+        #            self.color
+        #            )
+        #square right top
+        #for i in range(size_yy):
+        #    #for j in range(size_xx):
+        #        self.m.mlx_pixel_put(
+        #            self.ptr,
+        #            self.win,
+        #            self.pos_x + self.side_x - i - 1,
+        #            self.pos_y + 1,
+        #            self.color
+        #            )
+        #square right down
+        #for i in range(size_xx):
+        #    #for j in range(size_yy):
+        #        self.m.mlx_pixel_put(
+        #            self.ptr,
+        #            self.win,
+        #            self.pos_x + self.side_x - i + 1,
+        #            self.pos_y + self.side_y - 1,
+        #            self.color
+        #            )
+        #square left down
+        for i in range(size_xx):
+            #for j in range(size_yy):
+                self.m.mlx_pixel_put(
+                self.ptr,
+                self.win,
+                self.pos_x + i,
+                self.pos_y,
+                self.color
+                )
 
 class TraceSquare(Draw):
     def __init__(self, m, ptr, win, pos_x, pos_y, side_x, side_y, color, hex):
@@ -62,6 +142,15 @@ class TraceSquare(Draw):
             super().draw_line_down()
         if self.hex[3] == 1:
             super().draw_line_left()
+        if (self.hex[0] == 1 and self.hex[1]
+            and self.hex[2] and self.hex[3]):
+            # 0xORGB -> RGB
+            #self.color = 0xFF850606
+            self.color = 0xFFFF0000
+            super().draw_square()
+            #super().draw_square_42()
+            self.color = 0xFFFFFFFF
+
 
 class TraceNextSquare(TraceSquare):
     def __init__(self, m, ptr, win, pos_x, pos_y, side_x, side_y, color, hex, number_x, number_y, maze):
@@ -92,7 +181,7 @@ class TraceNextSquare(TraceSquare):
 
 def deal_key(key, ptr):
     print(f"Key pressed: {key}")
-    if key == 99: 
+    if key == 99:
         m.mlx_loop_exit(ptr)
     if key == 32:
         m.mlx_expose_hook(win, test.square_all, None)
