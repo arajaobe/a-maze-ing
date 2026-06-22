@@ -1,3 +1,16 @@
+#!/usr/bin/env python3
+# ########################################################################### #
+#   shebang: 1                                                                #
+#                                                          :::      ::::::::  #
+#   amazing.py                                           :+:      :+:    :+:  #
+#                                                      +:+ +:+         +:+    #
+#   By: arajaobe <arajaobe@student.42antananarivo.   +#+  +:+       +#+       #
+#                                                  +#+#+#+#+#+   +#+          #
+#   Created: 2026/06/22 13:22:53 by arajaobe            #+#    #+#            #
+#   Updated: 2026/06/22 15:25:15 by arajaobe           ###   ########.fr      #
+#                                                                             #
+# ########################################################################### #
+
 
 from utils import output, maze_init
 from maze_gen import dfs_maze, imperfect_maze_gen
@@ -52,7 +65,7 @@ maze_gen = dfs_maze(maze_init, maze_grid, visited)
 result_maze = []
 print (maze_init.perfect)
 
-output(maze_gen, maze_init)
+
 
 #if not maze_init.perfect:
 #    imperfect_maze = imperfect_maze_gen(maze_init, maze_gen, new_visited)
@@ -81,8 +94,9 @@ if shortest_path:
 else:
     pathways = dfs_maze_solver(maze_init, result_maze, second_visited)
 
-output(result_maze, maze_init)
-print(pathways)
+output(result_maze, maze_init, pathways)
+
+#print(pathways)
 
 
 

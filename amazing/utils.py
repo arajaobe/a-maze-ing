@@ -1,9 +1,27 @@
+#!/usr/bin/env python3
+# ########################################################################### #
+#   shebang: 1                                                                #
+#                                                          :::      ::::::::  #
+#   utils.py                                             :+:      :+:    :+:  #
+#                                                      +:+ +:+         +:+    #
+#   By: arajaobe <arajaobe@student.42antananarivo.   +#+  +:+       +#+       #
+#                                                  +#+#+#+#+#+   +#+          #
+#   Created: 2026/06/22 13:23:23 by arajaobe            #+#    #+#            #
+#   Updated: 2026/06/22 15:42:38 by arajaobe           ###   ########.fr      #
+#                                                                             #
+# ########################################################################### #
+
 
 from parsing import parse_config
 
 cfg = parse_config("config.txt")
 
-width = int(cfg["WIDTH"])
+#width = 0
+try:
+    width = int(cfg["WIDTH"])
+except ValueError as e:
+    print("Wrong value for width: ", e)
+
 height = int(cfg["HEIGHT"])
 entry = tuple(map(int, cfg["ENTRY"].split(",")))
 exit = tuple(map(int, cfg["EXIT"].split(",")))
@@ -33,6 +51,7 @@ class Maze:
                 row.append(value)
             maze.append(row)
         return maze
+
 
     #visited maze
     #def visited_cells(self):
@@ -68,11 +87,36 @@ def valid(x, y, width, height):
 
 
 #output file
-def output(maze, maze_init):
+def output(maze, maze_init, pathways):
     entry = maze_init.entry
     exit = maze_init.exit
-    for value in maze:
-        print("".join(value))
-    print("\n")
-    print(f"{entry[0]},{entry[1]}")
-    print(f"{exit[0]},{exit[1]}")
+    filename = maze_init.output_file
+    output_file_t = []
+
+    m = []
+    path = []
+    for v in maze:
+        row = []
+        for val in v:
+            row.append(val)
+        m.append("".join(row))
+
+    path.append("".join(pathways))
+
+    output_file_t.extend(m)
+    output_file_t.append("")
+    output_file_t.append(f"{entry[0]},{entry[1]}")
+    output_file_t.append(f"{exit[0]},{exit[1]}")
+    output_file_t.extend(path)
+
+    res = "\n".join(output_file_t)
+    #print(res)
+    save_file(filename, res)
+
+
+
+
+def save_file(filename: str, content: str) -> None:
+    f = open(filename, "w")
+    f.write(content)
+    f.close()

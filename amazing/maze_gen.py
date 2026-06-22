@@ -1,3 +1,16 @@
+#!/usr/bin/env python3
+# ########################################################################### #
+#   shebang: 1                                                                #
+#                                                          :::      ::::::::  #
+#   maze_gen.py                                          :+:      :+:    :+:  #
+#                                                      +:+ +:+         +:+    #
+#   By: arajaobe <arajaobe@student.42antananarivo.   +#+  +:+       +#+       #
+#                                                  +#+#+#+#+#+   +#+          #
+#   Created: 2026/06/22 13:23:07 by arajaobe            #+#    #+#            #
+#   Updated: 2026/06/22 13:23:08 by arajaobe           ###   ########.fr      #
+#                                                                             #
+# ########################################################################### #
+
 
 import random
 from utils import cell_from_hex, hex_for_cell, valid

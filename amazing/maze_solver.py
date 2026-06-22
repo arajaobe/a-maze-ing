@@ -1,3 +1,16 @@
+#!/usr/bin/env python3
+# ########################################################################### #
+#   shebang: 1                                                                #
+#                                                          :::      ::::::::  #
+#   maze_solver.py                                       :+:      :+:    :+:  #
+#                                                      +:+ +:+         +:+    #
+#   By: arajaobe <arajaobe@student.42antananarivo.   +#+  +:+       +#+       #
+#                                                  +#+#+#+#+#+   +#+          #
+#   Created: 2026/06/22 13:23:11 by arajaobe            #+#    #+#            #
+#   Updated: 2026/06/22 13:23:12 by arajaobe           ###   ########.fr      #
+#                                                                             #
+# ########################################################################### #
+
 
 from utils import cell_from_hex, valid
 from collections import deque
