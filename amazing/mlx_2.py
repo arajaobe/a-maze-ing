@@ -5,7 +5,7 @@ from amazing import result_maze
 # Window dimensions (fixed)
 w = 1080
 h = 720
-
+thickness = 3
 margin = 100
 
 # Choose one uniform cell size (square cells)
@@ -32,101 +32,99 @@ class Draw:
         self.color = color
 
     def draw_line_top(self):
-        for i in range(self.side_x):
-            self.m.mlx_pixel_put(
-                self.ptr,
-                self.win,
-                self.pos_x + i,
-                self.pos_y,
-                self.color
-                )
-
-    def draw_line_left(self):
-        for i in range(self.side_y):
-            self.m.mlx_pixel_put(
-                self.ptr,
-                self.win,
-                self.pos_x,
-                self.pos_y + self.side_y - i,
-                self.color
-                )
-
-    def draw_line_down(self):
-        for i in range(self.side_x):
-            self.m.mlx_pixel_put(
-                self.ptr,
-                self.win,
-                self.pos_x + i,
-                self.pos_y + self.side_y,
-                self.color
-                )
-
-    def draw_line_right(self):
-        for i in range(self.side_y):
-            self.m.mlx_pixel_put(
-                self.ptr,
-                self.win,
-                self.pos_x + self.side_x,
-                self.pos_y + i,
-                self.color
-                )
-
-    def draw_square_42(self):
-        size_yy = int(self.side_y)
-        size_xx = int(self.side_x)
-        for x in range(size_xx):
-            for y in range(size_yy):
+        for j in range(thickness):
+            for i in range(self.side_x):
                 self.m.mlx_pixel_put(
                     self.ptr,
                     self.win,
-                    self.pos_x + x,
-                    self.pos_y + y,
+                    self.pos_x + i,
+                    self.pos_y + j,
                     self.color
-                )
+                    )
 
-    def draw_square(self):
+    def draw_line_left(self):
+        for j in range(thickness):
+            for i in range(self.side_y):
+                self.m.mlx_pixel_put(
+                    self.ptr,
+                    self.win,
+                    self.pos_x + j,
+                    self.pos_y + self.side_y - i,
+                    self.color
+                    )
+
+    def draw_line_down(self):
+        for j in range(thickness):
+            for i in range(self.side_x):
+                self.m.mlx_pixel_put(
+                    self.ptr,
+                    self.win,
+                    self.pos_x + i + j,
+                    self.pos_y + self.side_y + j,
+                    self.color
+                    )
+
+    def draw_line_right(self):
+        for j in range(thickness):
+            for i in range(self.side_y):
+                self.m.mlx_pixel_put(
+                    self.ptr,
+                    self.win,
+                    self.pos_x + self.side_x + j,
+                    self.pos_y + i,
+                    self.color
+                    )
+
+
+    def draw_square(self, color_1, color_2, color_3, color_4):
         size_yy = int(size_y / 2)
         size_xx= int(size_x / 2)
+        temp = self.color
         #square left top
-        #for i in range(size_yy):
-        #    #for j in range(size_xx):
-        #        self.m.mlx_pixel_put(
-        #            self.ptr,
-        #            self.win,
-        #            self.pos_x + i + 1,
-        #            self.pos_y + 1,
-        #            self.color
-        #            )
-        #square right top
-        #for i in range(size_yy):
-        #    #for j in range(size_xx):
-        #        self.m.mlx_pixel_put(
-        #            self.ptr,
-        #            self.win,
-        #            self.pos_x + self.side_x - i - 1,
-        #            self.pos_y + 1,
-        #            self.color
-        #            )
-        #square right down
-        #for i in range(size_xx):
-        #    #for j in range(size_yy):
-        #        self.m.mlx_pixel_put(
-        #            self.ptr,
-        #            self.win,
-        #            self.pos_x + self.side_x - i + 1,
-        #            self.pos_y + self.side_y - 1,
-        #            self.color
-        #            )
-        #square left down
-        for i in range(size_xx):
-            #for j in range(size_yy):
+        self.color = color_1
+        for i in range(size_yy):
+            for j in range(size_xx):
                 self.m.mlx_pixel_put(
-                self.ptr,
-                self.win,
-                self.pos_x + i,
-                self.pos_y,
-                self.color
+                        self.ptr,
+                        self.win,
+                        self.pos_x + i + thickness,
+                        self.pos_y + j + thickness,
+                        self.color
+                    )
+        #square right top
+        self.color = color_2
+        for i in range(size_yy):
+            for j in range(size_xx):
+                self.m.mlx_pixel_put(
+                        self.ptr,
+                        self.win,
+                        self.pos_x + self.side_x - i - thickness,
+                        self.pos_y + j + thickness,
+                        self.color
+                    )
+        #square right down
+        self.color = color_3
+        for i in range(size_xx):
+            for j in range(size_yy):
+                self.m.mlx_pixel_put(
+                        self.ptr,
+                        self.win,
+                        self.pos_x + self.side_x - i - thickness,
+                        self.pos_y + self.side_y - j - thickness,
+                        self.color
+                    )
+        #square left down
+        self.color = color_4
+        for i in range(size_xx):
+            for j in range(size_yy):
+                self.m.mlx_pixel_put(
+                    self.ptr,
+                    self.win,
+                    self.pos_x + i + thickness,
+                    self.pos_y + self.side_y - j - thickness,
+                    self.color
                 )
+        self.color = temp
 
 class TraceSquare(Draw):
     def __init__(self, m, ptr, win, pos_x, pos_y, side_x, side_y, color, hex):
@@ -144,12 +142,7 @@ class TraceSquare(Draw):
             super().draw_line_left()
         if (self.hex[0] == 1 and self.hex[1]
             and self.hex[2] and self.hex[3]):
-            # 0xORGB -> RGB
-            #self.color = 0xFF850606
-            self.color = 0xFFFF0000
-            super().draw_square()
-            #super().draw_square_42()
-            self.color = 0xFFFFFFFF
+            super().draw_square(0xFF253614, 0xFF748596, 0xFF326598, 0xFF784512)
 
 
 class TraceNextSquare(TraceSquare):
@@ -179,6 +172,18 @@ class TraceNextSquare(TraceSquare):
         self.pos_x = temp_x
         self.pos_y = temp_y
 
+    def draw_posit(self, x, y):
+        temp_x = self.pos_x
+        temp_y = self.pos_y
+        self.pos_x = x
+        self.pos_y = y
+        super().draw_square(0xFF253614, 0xFF748596, 0xFF326598, 0xFF784512)
+        self.pos_x = temp_x
+        self.pos_y = temp_y
+
+#def convert_posit_to_pixel(x, y):
+
+
 def deal_key(key, ptr):
     print(f"Key pressed: {key}")
     if key == 99:
@@ -196,6 +201,7 @@ maze = result_maze
 test = TraceNextSquare(m, ptr, win, border_x, border_y, size_x, size_y,
                        0xFFFFFFFF, cell_from_hex('0'), width, height, maze)
 
+test.draw_posit(3, 6)
 m.mlx_key_hook(win, deal_key, ptr)
 m.mlx_expose_hook(win, test.square_all, None)
 
