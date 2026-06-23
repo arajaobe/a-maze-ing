@@ -12,25 +12,27 @@
 # ########################################################################### #
 
 
-from parsing import parse_config
+from parsing import parse_config, get_config_values, validate_config
 
-cfg = parse_config("config.txt")
-
-#width = 0
 try:
-    width = int(cfg["WIDTH"])
-except ValueError as e:
-    print("Wrong value for width: ", e)
+    cfg = parse_config("config.txt")
+    width, height, entry, exit, output_file, perfect = get_config_values(cfg)
+except Exception as e:
+    print(f"{e}")
+    exit(1)
 
-height = int(cfg["HEIGHT"])
-entry = tuple(map(int, cfg["ENTRY"].split(",")))
-exit = tuple(map(int, cfg["EXIT"].split(",")))
-output_file = cfg["OUTPUT_FILE"]
-perfect = cfg["PERFECT"].lower()
-if perfect == "true":
-    perfect = True
-else:
-    perfect = False
+#try:
+#    width, height, entry, exit, output_file, perfect = get_config_values(cfg)
+#except Exception as e:
+#    print(f"ENTRY and EXIT must be in 'x,y' format with integers: {e}")
+#    exit(1)
+
+#try:
+#    validate_config(width, height, entry, exit)
+#except ValueError as e:
+#    print(f"Config validation error: {e}")
+#    exit(1)  # stop program safely
+
 
 
 class Maze:

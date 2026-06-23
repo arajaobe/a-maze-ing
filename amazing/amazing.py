@@ -23,6 +23,10 @@ import copy
 def maze_generation (maze_grid, maze_init):
     height = maze_init.height
     width = maze_init.width
+    entry = maze_init.entry
+    exit = maze_init.exit
+    x, y = entry
+    a, b = exit
     if width >= 9 and height >= 7:
         start_x = (width - 7) // 2
         start_y = (height - 5) // 2
@@ -42,6 +46,8 @@ def maze_generation (maze_grid, maze_init):
         for py in range(5):
             for px in range(7):
                 if maze_grid[start_y + py][start_x + px] == 'F':
+                    if (x == start_x + px and y == start_y + py) or (a == start_x + px and b == start_y + py):
+                        raise Exception ("Entry and/or Exit are in the 42 wall pattern")
                     visited[start_y + py][start_x + px] = True
                 else:
                     maze_grid[start_y + py][start_x + px] = 'F'
@@ -53,8 +59,12 @@ def maze_generation (maze_grid, maze_init):
 maze_grid= maze_init.generate_first_maze('F')
 visited = maze_init.generate_first_maze(False)
 
+try:
+    perfect_maze = maze_generation(maze_grid, maze_init)
+except Exception as e:
+    print(f"{e}")
+    exit(1)
 
-perfect_maze = maze_generation(maze_grid, maze_init)
 maze_grid = perfect_maze
 new_visited = copy.deepcopy(visited)
 second_visited = copy.deepcopy(visited)
