@@ -6,20 +6,20 @@
 #  By: samrazaf <samrazaf@student.42antananari   +#+  +:+       +#+         #
 #                                              +#+#+#+#+#+   +#+            #
 #  Created: 2026/06/23 00:38:34 by samrazaf        #+#    #+#               #
-#  Updated: 2026/06/28 21:08:10 by samrazaf        ###   ########.fr        #
+#  Updated: 2026/06/29 17:29:42 by samrazaf        ###   ########.fr        #
 #                                                                           #
 # ************************************************************************* #
 
 import mlx
 from utils import width, height, entry, exit, cell_from_hex
-from amazing import result_maze, maze_init, maze_gen, new_visited, dfs_maze, imperfect_maze_gen, maze_grid, visited
+from amazing import result_maze, maze_init, maze_gen, new_visited, dfs_maze, imperfect_maze_gen, maze_grid, visited, pathways
 from maze_solver import bfs_shortest_path
 import time
 
 # Window dimensions (fixed)
 w = 550
 h = 650
-thickness = 2
+thickness = 5
 margin = 40
 
 # Choose one uniform cell size (square cells)
@@ -91,8 +91,8 @@ class Draw:
 
 
     def draw_square(self, color_1, color_2, color_3, color_4):
-        size_yy = int(size_y / 2)
-        size_xx= int(size_x / 2)
+        size_yy = int(size_y / 2) - thickness
+        size_xx= int(size_x / 2) - thickness
         temp = self.color
         #square left top
         self.color = color_1
@@ -232,11 +232,21 @@ class TraceNextSquare(TraceSquare):
         self.pos_x = temp_x
         self.pos_y = temp_y
 
+    def draw_string(self, y, char):
+        self.m.mlx_string_put(
+            self.ptr,
+            self.win,
+            margin,
+            w + y,
+            self.color,
+            char
+        )
+
 
 C = {
     'W': 0xFFFFFFFF,
     'R': 0xFFFF2020,
-    'B': 0xFF2020FF,
+    'B': 0xFF0000FF,
     'G': 0xFF20FF20,
     'Y': 0xFFFFFF20,
 }
@@ -277,7 +287,7 @@ def draw_path(draw, maze_solve, color_1, color_2, color_3, color_4):
             return
 
 #if perfect == "True":
-path = bfs_shortest_path(maze_init, maze_gen, new_visited)
+path = pathways
 #else:
 #    path = dfs_maze_solver(maze_init, result_maze, new_visited)
 
@@ -291,8 +301,13 @@ path = bfs_shortest_path(maze_init, maze_gen, new_visited)
 #    return result_maze
 
 def draw_maze(_):
-    test.square_all(None)
     draw_enter_sort(test)
+    test.square_all(None)
+    test.draw_string(0, "'a' to regen maze")
+    test.draw_string(15, "'b' to show path maze")
+    test.draw_string(30, "'c' to quit maze")
+
+
 
 
 def deal_key(key, ptr):
@@ -307,6 +322,9 @@ def deal_key(key, ptr):
         draw_maze(None)
     if key == 98:
         draw_path(test, path, C['B'], C['B'], C['B'], C['B'])
+        test.pos_x = border_x
+        test.pos_y = border_y
+        draw_maze(None)
 
 
     #if key == 114:
