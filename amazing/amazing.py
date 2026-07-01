@@ -97,12 +97,9 @@ if not maze_init.perfect:
 else:
     result_maze = maze_gen
 
-shortest_path = True
 
-if shortest_path:
-    pathways = bfs_shortest_path(maze_init, result_maze, second_visited)
-else:
-    pathways = dfs_maze_solver(maze_init, result_maze, second_visited)
+pathways = bfs_shortest_path(maze_init, result_maze, second_visited)
+
 
 output(result_maze, maze_init, pathways)
 

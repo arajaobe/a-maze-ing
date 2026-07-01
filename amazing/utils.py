@@ -12,7 +12,7 @@
 # ########################################################################### #
 
 
-from parsing import parse_config, get_config_values, validate_config
+from parsing import parse_config, get_config_values
 
 try:
     cfg = parse_config("config.txt")

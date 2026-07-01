@@ -11,7 +11,7 @@
 # ************************************************************************* #
 
 import mlx
-from utils import width, height, entry, exit, cell_from_hex
+from utils import width, height, entry, exit, output_file, perfect, cell_from_hex, Maze
 from amazing import result_maze, maze_init, maze_gen, new_visited, dfs_maze, imperfect_maze_gen, maze_grid, visited, pathways
 from maze_solver import bfs_shortest_path
 import time
@@ -105,26 +105,9 @@ class Draw:
                     self.pos_y + j + thickness,
                     self.color
                 )
-        #for i in range(size_yy):
-        #    for j in range(size_xx):
-        #        self.m.mlx_pixel_put(
-        #                self.ptr,
-        #                self.win,
-        #                self.pos_x + i + thickness,
-        #                self.pos_y + j + thickness,
-        #                self.color
-        #            )
-        #square right top
+
         self.color = color_2
-        #for i in range(size_yy):
-        #    for j in range(size_xx):
-        #        self.m.mlx_pixel_put(
-        #                self.ptr,
-        #                self.win,
-        #                self.pos_x + self.side_x - i,
-        #                self.pos_y + j + thickness,
-        #                self.color
-        #            )
+
         for i in range(size_xx):
             for j in range(size_yy):
                 self.m.mlx_pixel_put(
@@ -146,16 +129,6 @@ class Draw:
                     self.color
                 )
 
-        #for i in range(size_xx):
-        #    for j in range(size_yy):
-        #        self.m.mlx_pixel_put(
-        #                self.ptr,
-        #                self.win,
-        #                self.pos_x + self.side_y - i,
-        #                self.pos_y + self.side_x - j,
-        #                self.color
-        #            )
-        ##square left down
         self.color = color_4
         for i in range(size_xx):
             for j in range(size_yy):
@@ -166,15 +139,7 @@ class Draw:
                     self.pos_y + size_yy + j + thickness,
                     self.color
                 )
-        #for i in range(size_xx):
-        #    for j in range(size_yy):
-        #        self.m.mlx_pixel_put(
-        #            self.ptr,
-        #            self.win,
-        #            self.pos_x + i + thickness,
-        #            self.pos_y + self.side_y - j,
-        #            self.color
-        #        )
+
         self.color = temp
 
 class TraceSquare(Draw):
@@ -286,19 +251,8 @@ def draw_path(draw, maze_solve, color_1, color_2, color_3, color_4):
         if i == (len(maze_solve) - 1):
             return
 
-#if perfect == "True":
 path = pathways
-#else:
-#    path = dfs_maze_solver(maze_init, result_maze, new_visited)
-
-#def draw_move(maze):
-
-#def maze_regen():
-#    if not maze_init.perfect:
-#        result_maze = imperfect_maze_gen(maze_init, maze_gen, new_visited)
-#    else:
-#        result_maze = maze_gen
-#    return result_maze
+#maze_init = Maze(width, height, entry, exit, output_file, perfect )
 
 def draw_maze(_):
     draw_enter_sort(test)
@@ -307,24 +261,75 @@ def draw_maze(_):
     test.draw_string(15, "'b' to show path maze")
     test.draw_string(30, "'c' to quit maze")
 
-
-
-
 def deal_key(key, ptr):
-    print(f"Key pressed: {key}")
-    if key == 99:
+    print(f"Key pressed: {key} ({chr(key)})")
+    if key == 99:  # 'c'
         m.mlx_loop_exit(ptr)
-    if key == 97:
+
+    if key == 97:  # 'a' to regenerate
         m.mlx_clear_window(ptr, win)
+        new_maze = maze_regen(maze_init)
+        test.maze = new_maze
         test.pos_x = border_x
         test.pos_y = border_y
-        test.maze = maze_regen()
-        #draw_maze(None)
-    if key == 98:
+        draw_maze(None)
+
+    if key == 98:  # 'b' to show path
         draw_path(test, path, C['B'], C['B'], C['B'], C['B'])
         test.pos_x = border_x
         test.pos_y = border_y
         draw_maze(None)
+
+
+#MAZE_REGEN
+def maze_generation (maze_grid, maze_init, visited):
+    height = maze_init.height
+    width = maze_init.width
+    entry = maze_init.entry
+    exit = maze_init.exit
+    x, y = entry
+    a, b = exit
+    if width >= 9 and height >= 7:
+        start_x = (width - 7) // 2
+        start_y = (height - 5) // 2
+
+        pattern = [
+        ["F"," "," "," ","F","F","F"],
+        ["F"," "," "," "," "," ","F"],
+        ["F","F","F"," ","F","F","F"],
+        [" "," ","F"," ","F"," "," "],
+        [" "," ","F"," ","F","F","F"],
+        ]
+
+        for py in range(5):
+            for px in range(7):
+                maze_grid[start_y + py][start_x + px] = pattern[py][px]
+
+        for py in range(5):
+            for px in range(7):
+                if maze_grid[start_y + py][start_x + px] == 'F':
+                    if (x == start_x + px and y == start_y + py) or (a == start_x + px and b == start_y + py):
+                        raise Exception ("Entry and/or Exit are in the 42 wall pattern")
+                    visited[start_y + py][start_x + px] = True
+                else:
+                    maze_grid[start_y + py][start_x + px] = 'F'
+
+    return maze_grid
+
+def maze_regen(init):
+    # cell creation
+    maze_grid= init.generate_first_maze('F')
+    visited = init.generate_first_maze(False)
+
+    try:
+        perfect_maze = maze_generation(maze_grid, init, visited)
+    except Exception as e:
+        print(f"{e}")
+        exit(1)
+
+    maze_grid = perfect_maze
+
+    return dfs_maze(init, maze_grid, visited)
 
 
     #if key == 114:
@@ -343,13 +348,7 @@ win = m.mlx_new_window(ptr, w, h, "A-maze-ing")
 maze = result_maze
 
 
-def maze_regen():
-    return result_maze
 
-
-#if maze_regen():
-#    maze = maze_regen()
-# Start drawing at border offsets
 test = TraceNextSquare(m, ptr, win, border_x, border_y, size_x, size_y,
                        0xFFFFFFFF, cell_from_hex('0'), width, height, maze)
 
