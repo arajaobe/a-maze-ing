@@ -19,7 +19,7 @@ import time
 # Window dimensions (fixed)
 w = 550
 h = 650
-thickness = 5
+thickness = 2
 margin = 40
 
 # Choose one uniform cell size (square cells)
@@ -91,8 +91,8 @@ class Draw:
 
 
     def draw_square(self, color_1, color_2, color_3, color_4):
-        size_yy = int(size_y / 2) - thickness
-        size_xx= int(size_x / 2) - thickness
+        size_yy = int(size_y / 2)
+        size_xx= int(size_x / 2)
         temp = self.color
         #square left top
         self.color = color_1
@@ -193,7 +193,7 @@ class TraceSquare(Draw):
             super().draw_line_left()
         if (self.hex[0] == 1 and self.hex[1]
             and self.hex[2] and self.hex[3]):
-            super().draw_square(0xFF253614, 0xFF748596, 0xFF326598, 0xFF784512)
+            super().draw_square(0xFF748596, 0xFF748596, 0xFF748596, 0xFF748596)
 
 
 class TraceNextSquare(TraceSquare):
@@ -319,7 +319,7 @@ def deal_key(key, ptr):
         test.pos_x = border_x
         test.pos_y = border_y
         test.maze = maze_regen()
-        draw_maze(None)
+        #draw_maze(None)
     if key == 98:
         draw_path(test, path, C['B'], C['B'], C['B'], C['B'])
         test.pos_x = border_x
@@ -344,11 +344,7 @@ maze = result_maze
 
 
 def maze_regen():
-    if not maze_init.perfect:
-        maze = imperfect_maze_gen(maze_init, maze_gen, new_visited)
-    else:
-        maze = dfs_maze(maze_init, maze_grid, visited)
-    return maze
+    return result_maze
 
 
 #if maze_regen():
